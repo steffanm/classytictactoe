@@ -1,139 +1,197 @@
+const readline = require("readline");
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 class Game {
+  player = "X";
+  ticktacktoe = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
   constructor() {
-    this.readline = require("readline");
+    this.printBoard();
+    this.defaultPlayer();
+  }
 
-    this.defaultPlayer = () => {
-      rl.question(
-        "Default player is X, Do you want to change it, y or n ",
-        function (defaultOrChoose) {
-          let choice = defaultOrChoose.toLowerCase();
-          if (choice == "y") {
-            setPlayer();
-          } else if (choice === "n") {
-            console.log(`Starting player is X`);
-            printBoard();
-            playTickTacToe();
-          } else {
-            defaultPlayer();
-          }
-        }
-      );
-    };
-    this.playTickTacToe = () => {
-      let continePlay = false;
-      for (i = 0; i < ticktacktoe.length; i++) {
-        if (ticktacktoe[i] === " ") {
-          continePlay = true;
-        }
-      }
-
-      if (continePlay === true) {
-        rl.question("Play Game ? ", function (movve) {
-          gameplayer(movve);
-        });
-      }
-    };
-
-    this.gameplayer = (move) => {
-      let moveToCheck = parseInt(move) - 1;
-      let i;
-      for (i = 0; i < ticktacktoe.length; i++) {
-        if (moveToCheck == i && ticktacktoe[i] === " ") {
-          ticktacktoe[i] = player;
-          if (player === "X") {
-            player = "O";
-          } else if (player === "O") {
-            player = "X";
-          }
-        } else {
+  defaultPlayer() {
+    rl.question(
+      "Default player is X, Do you want to change it, y or n ",
+      function (defaultOrChoose) {
+        let choice = defaultOrChoose.toLowerCase();
+        if (choice == "y") {
+          this.setPlayer();
+        } else if (choice === "n") {
+          console.log(`Starting player is X`);
+          this.printBoard();
           playTickTacToe();
-        }
-      }
-    };
-
-    this.calculateWinner = () => {
-      if (
-        ticktacktoe[0] == ticktacktoe[1] &&
-        ticktacktoe[0] == ticktacktoe[2]
-      ) {
-        return ticktacktoe[0];
-      } else if (
-        ticktacktoe[3] == ticktacktoe[4] &&
-        ticktacktoe[3] == ticktacktoe[5]
-      ) {
-        return ticktacktoe[3];
-      } else if (
-        ticktacktoe[6] == ticktacktoe[7] &&
-        ticktacktoe[6] == ticktacktoe[8]
-      ) {
-        return ticktacktoe[6];
-      } else if (
-        ticktacktoe[0] == ticktacktoe[3] &&
-        ticktacktoe[0] == ticktacktoe[6]
-      ) {
-        return ticktacktoe[0];
-      } else if (
-        ticktacktoe[1] == ticktacktoe[4] &&
-        ticktacktoe[1] == ticktacktoe[7]
-      ) {
-        return ticktacktoe[1];
-      } else if (
-        ticktacktoe[2] == ticktacktoe[5] &&
-        ticktacktoe[2] == ticktacktoe[8]
-      ) {
-        return (winner = ticktacktoe[2]);
-      } else if (
-        ticktacktoe[0] == ticktacktoe[4] &&
-        ticktacktoe[0] == ticktacktoe[8]
-      ) {
-        return ticktacktoe[0];
-      } else if (
-        ticktacktoe[2] == ticktacktoe[4] &&
-        ticktacktoe[2] == ticktacktoe[6]
-      ) {
-        return ticktacktoe[2];
-      }
-
-      return " ";
-    };
-    this.printBoard = () => {
-      let line = "";
-      for (let i = 1; i < 10; i++) {
-        line += ticktacktoe[i - 1] + " | ";
-
-        if (i % 3 === 0) {
-          console.log(line);
-          console.log("____________");
-          line = "";
-        }
-      }
-    };
-    this.gameplayer = (move) => {
-      let moveToCheck = parseInt(move) - 1;
-      let i;
-      for (i = 0; i < ticktacktoe.length; i++) {
-        if (moveToCheck == i && ticktacktoe[i] === " ") {
-          ticktacktoe[i] = player;
-          if (player === "X") {
-            player = "O";
-          } else if (player === "O") {
-            player = "X";
-          }
         } else {
-          playTickTacToe();
+          this.defaultPlayer();
         }
       }
-
-      console.log("\n");
-      printBoard();
-      const winner = calculateWinner();
-      if (winner != " ") {
-        console.log(`Winner is ${winner}`);
-        process.exit(0);
+    );
+  }
+  playTickTacToe() {
+    let continePlay = false;
+    for (i = 0; i < this.ticktacktoe.length; i++) {
+      if (this.ticktacktoe[i] === " ") {
+        continePlay = true;
       }
-      playTickTacToe();
-    };
-    printBoard();
-    defaultPlayer();
+    }
+
+    if (continePlay === true) {
+      rl.question("Play Game ? ", function (movve) {
+        this.gameplayer(movve);
+      });
+    }
+  }
+
+  gameplayer(move) {
+    let moveToCheck = parseInt(move) - 1;
+    // let i;
+    for (let i = 0; i < this.ticktacktoe.length; i++) {
+      if (moveToCheck == i && this.ticktacktoe[i] === " ") {
+        this.ticktacktoe[i] = this.player;
+        if (this.player === "X") {
+          this.player = "O";
+        } else if (this.player === "O") {
+          this.player = "X";
+        }
+      } else {
+        this.playTickTacToe();
+      }
+    }
+  }
+
+  calculateWinner() {
+    if (
+      this.ticktacktoe[0] == this.ticktacktoe[1] &&
+      this.ticktacktoe[0] == this.ticktacktoe[2]
+    ) {
+      return this.ticktacktoe[0];
+    } else if (
+      this.ticktacktoe[3] == this.ticktacktoe[4] &&
+      this.ticktacktoe[3] == this.ticktacktoe[5]
+    ) {
+      return this.ticktacktoe[3];
+    } else if (
+      this.ticktacktoe[6] == this.ticktacktoe[7] &&
+      this.ticktacktoe[6] == this.ticktacktoe[8]
+    ) {
+      return this.ticktacktoe[6];
+    } else if (
+      this.ticktacktoe[0] == this.ticktacktoe[3] &&
+      this.ticktacktoe[0] == this.ticktacktoe[6]
+    ) {
+      return this.ticktacktoe[0];
+    } else if (
+      this.ticktacktoe[1] == this.ticktacktoe[4] &&
+      this.ticktacktoe[1] == this.ticktacktoe[7]
+    ) {
+      return this.ticktacktoe[1];
+    } else if (
+      this.ticktacktoe[2] == this.ticktacktoe[5] &&
+      this.ticktacktoe[2] == this.ticktacktoe[8]
+    ) {
+      return (winner = this.ticktacktoe[2]);
+    } else if (
+      this.ticktacktoe[0] == this.ticktacktoe[4] &&
+      this.ticktacktoe[0] == this.ticktacktoe[8]
+    ) {
+      return this.ticktacktoe[0];
+    } else if (
+      this.ticktacktoe[2] == this.ticktacktoe[4] &&
+      this.ticktacktoe[2] == this.ticktacktoe[6]
+    ) {
+      return this.ticktacktoe[2];
+    }
+
+    return " ";
+  }
+
+  playTickTacToe() {
+    let continePlay = false;
+    for (let i = 0; i < this.ticktacktoe.length; i++) {
+      if (this.ticktacktoe[i] === " ") {
+        continePlay = true;
+      }
+    }
+
+    if (continePlay === true) {
+      rl.question("Play Game ? ", (movve) => {
+        this.gameplayer(movve);
+      });
+    }
+  }
+
+  gameplayer(move) {
+    let moveToCheck = parseInt(move) - 1;
+
+    for (let i = 0; i < this.ticktacktoe.length; i++) {
+      if (moveToCheck == i && this.ticktacktoe[i] === " ") {
+        this.ticktacktoe[i] = this.player;
+        if (this.player === "X") {
+          this.player = "O";
+        } else if (this.player === "O") {
+          this.player = "X";
+        }
+      } else {
+        this.playTickTacToe();
+      }
+    }
+  }
+
+  printBoard() {
+    let line = "";
+    for (let i = 1; i < 10; i++) {
+      line += this.ticktacktoe[i - 1] + " | ";
+
+      if (i % 3 === 0) {
+        console.log(line);
+        console.log("____________");
+        line = "";
+      }
+    }
+  }
+  gameplayer(move) {
+    let moveToCheck = parseInt(move) - 1;
+    for (let i = 0; i < this.ticktacktoe.length; i++) {
+      if (moveToCheck == i && this.ticktacktoe[i] === " ") {
+        this.ticktacktoe[i] = this.player;
+        if (this.player === "X") {
+          this.player = "O";
+        } else if (this.player === "O") {
+          this.player = "X";
+        }
+      } else {
+        this.playTickTacToe();
+      }
+    }
+
+    console.log("\n");
+    this.printBoard();
+    const winner = this.calculateWinner();
+    if (winner != " ") {
+      console.log(`Winner is ${winner}`);
+      process.exit(0);
+    }
+    this.playTickTacToe();
+  }
+  defaultPlayer() {
+    rl.question(
+      "Default player is X, Do you want to change it, y or n ",
+      (defaultOrChoose) => {
+        let choice = defaultOrChoose.toLowerCase();
+        if (choice == "y") {
+          this.setPlayer();
+        } else if (choice === "n") {
+          console.log(`Starting player is X`);
+          this.printBoard();
+          this.playTickTacToe();
+        } else {
+          this.defaultPlayer();
+        }
+      }
+    );
   }
 }
+const x = new Game();
